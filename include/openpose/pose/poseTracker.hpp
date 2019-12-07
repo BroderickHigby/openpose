@@ -163,8 +163,8 @@ namespace op
         }
 
         void reset(){
-            mFrameCount = -1;
-            mTracklets.clear();
+//             mFrameCount = -1;
+//             mTracklets.clear();
         }
     };
 }
