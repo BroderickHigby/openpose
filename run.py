@@ -1,3 +1,4 @@
+from tqdm import tqdm
 import os
 import json
 import subprocess
@@ -22,7 +23,8 @@ def run():
     output: Keypoint tracking JSON 
     '''
     video_file = os.getenv("VIDEO_FILE", None)
-    video_file = 'video/cardiB.mp4'
+#    video_file = os.rename(video_file, 'video.mp4') 
+    video_file = 'video/video.mp4'
     openpose_args = "build/examples/openpose/openpose.bin --model_pose BODY_25 --tracking 1 --render_pose 0 --display 0 --write_json output/ --video "
     start = timer()
     if video_file is not None: 
@@ -40,14 +42,22 @@ def run():
 
     time_elapsed = timedelta(seconds=timer()-start)
     print(f"*** Completed Pose Estimation. Time elapsed: {time_elapsed} ***")
-
-    # TODO: Remove dumps
-    pose_data = json.dumps(output)
-    print(pose_data)
     if JOB_ID is not None:
         print(f"Save output to Firebase at job_id: {JOB_ID}")
+        
+        staf_data = {}
+        pose_json_dir = './output'
+        staf_files = os.listdir(pose_json_dir)
+        staf_files_dic = {}
+        frame_numbers = [[int(i[6:18]), i] for i in staf_files if i[0] != '.']
+        for i in frame_numbers:
+            staf_files_dic[i[0]] = i[1]
+            for frame in tqdm(staf_files_dic):
+                file_name = staf_files_dic[frame]
+                with open(os.path.join(pose_json_dir ,file_name)) as f:
+                    staf_data = json.load(f)
+                    pose_data = json.dumps(staf_data)
 
-        pose_data = json.dumps(output)
 
         for index, item in enumerate(pose_data):
             (
