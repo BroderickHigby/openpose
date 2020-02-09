@@ -170,11 +170,11 @@ namespace op
         bool waitAndEmplace(TDatumsSP& tDatums);
 
         /**
-         * Similar to waitAndEmplace(const TDatumsSP& tDatums), but it takes a cv::Mat as input.
-         * @param cvMat cv::Mat with the image to be processed.
+         * Similar to waitAndEmplace(const TDatumsSP& tDatums), but it takes a Matrix as input.
+         * @param matrix Matrix with the image to be processed.
          * @return Boolean specifying whether the tDatums could be emplaced.
          */
-        bool waitAndEmplace(cv::Mat& cvMat);
+        bool waitAndEmplace(Matrix& matrix);
 
         /**
          * Push (copy) an element on the first (input) queue.
@@ -193,11 +193,11 @@ namespace op
         bool waitAndPush(const TDatumsSP& tDatums);
 
         /**
-         * Similar to waitAndPush(const TDatumsSP& tDatums), but it takes a cv::Mat as input.
-         * @param cvMat cv::Mat with the image to be processed.
+         * Similar to waitAndPush(const TDatumsSP& tDatums), but it takes a Matrix as input.
+         * @param matrix Matrix with the image to be processed.
          * @return Boolean specifying whether the tDatums could be pushed.
          */
-        bool waitAndPush(const cv::Mat& cvMat);
+        bool waitAndPush(const Matrix& matrix);
 
         /**
          * Pop (retrieve) an element from the last (output) queue.
@@ -226,11 +226,11 @@ namespace op
         bool emplaceAndPop(TDatumsSP& tDatums);
 
         /**
-         * Similar to emplaceAndPop(TDatumsSP& tDatums), but it takes a cv::Mat as input.
-         * @param cvMat cv::Mat with the image to be processed.
+         * Similar to emplaceAndPop(TDatumsSP& tDatums), but it takes a Matrix as input.
+         * @param matrix Matrix with the image to be processed.
          * @return TDatumsSP element where the processed information will be placed.
          */
-        TDatumsSP emplaceAndPop(const cv::Mat& cvMat);
+        TDatumsSP emplaceAndPop(const Matrix& matrix);
 
     private:
         const ThreadManagerMode mThreadManagerMode;
@@ -538,7 +538,7 @@ namespace op
     }
 
     template<typename TDatum, typename TDatums, typename TDatumsSP, typename TWorker>
-    bool WrapperT<TDatum, TDatums, TDatumsSP, TWorker>::waitAndEmplace(cv::Mat& cvMat)
+    bool WrapperT<TDatum, TDatums, TDatumsSP, TWorker>::waitAndEmplace(Matrix& matrix)
     {
         try
         {
@@ -548,7 +548,7 @@ namespace op
             auto& tDatumPtr = datumsPtr->at(0);
             tDatumPtr = std::make_shared<TDatum>();
             // Fill datum
-            std::swap(tDatumPtr->cvInputData, cvMat);
+            std::swap(tDatumPtr->cvInputData, matrix);
             // Return result
             return waitAndEmplace(datumsPtr);
         }
@@ -594,7 +594,7 @@ namespace op
     }
 
     template<typename TDatum, typename TDatums, typename TDatumsSP, typename TWorker>
-    bool WrapperT<TDatum, TDatums, TDatumsSP, TWorker>::waitAndPush(const cv::Mat& cvMat)
+    bool WrapperT<TDatum, TDatums, TDatumsSP, TWorker>::waitAndPush(const Matrix& matrix)
     {
         try
         {
@@ -604,7 +604,7 @@ namespace op
             auto& tDatumPtr = datumsPtr->at(0);
             tDatumPtr = std::make_shared<TDatum>();
             // Fill datum
-            tDatumPtr->cvInputData = cvMat.clone();
+            tDatumPtr->cvInputData = matrix.clone();
             // Return result
             return waitAndEmplace(datumsPtr);
         }
@@ -667,7 +667,7 @@ namespace op
     }
 
     template<typename TDatum, typename TDatums, typename TDatumsSP, typename TWorker>
-    TDatumsSP WrapperT<TDatum, TDatums, TDatumsSP, TWorker>::emplaceAndPop(const cv::Mat& cvMat)
+    TDatumsSP WrapperT<TDatum, TDatums, TDatumsSP, TWorker>::emplaceAndPop(const Matrix& matrix)
     {
         try
         {
@@ -677,7 +677,7 @@ namespace op
             auto& tDatumPtr = datumsPtr->at(0);
             tDatumPtr = std::make_shared<TDatum>();
             // Fill datum
-            tDatumPtr->cvInputData = cvMat;
+            tDatumPtr->cvInputData = matrix;
             // Emplace and pop
             emplaceAndPop(datumsPtr);
             // Return result
