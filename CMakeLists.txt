@@ -1,7 +1,7 @@
 ### VERSION INFO
 set(OpenPose_VERSION_MAJOR 1)
 set(OpenPose_VERSION_MINOR 5)
-set(OpenPose_VERSION_PATCH 0)
+set(OpenPose_VERSION_PATCH 1)
 set(OpenPose_VERSION ${OpenPose_VERSION_MAJOR}.${OpenPose_VERSION_MINOR}.${OpenPose_VERSION_PATCH})
 
 
@@ -554,7 +554,7 @@ if (WIN32)
   set(OP_WIN_DIR "${CMAKE_SOURCE_DIR}/3rdparty/windows")
 
   # Download required zip files
-  download_zip("opencv_401_v14_15_2019_03_14.zip" ${OP_WIN_URL} ${FIND_LIB_PREFIX} df8f611c032cfa86c56a8ad419f01832)
+  download_zip("opencv_411_v14_15_2019_09_24.zip" ${OP_WIN_URL} ${FIND_LIB_PREFIX} cf080121a8189ecb7f53ac9b0fef36c6)
   # download_zip("caffe3rdparty_2019_03_12.zip" ${OP_WIN_URL} ${FIND_LIB_PREFIX} 34c49be6a2418fd1670b46fc455eebc0)
   download_zip("caffe3rdparty_15_2019_03_14.zip" ${OP_WIN_URL} ${FIND_LIB_PREFIX} 9fcc6bdf4765db699d1a279c8d6b830b)
   if (${GPU_MODE} MATCHES "OPENCL")
@@ -572,7 +572,7 @@ if (WIN32)
 
   # set(VS_VERSION "14")
   set(VS_VERSION "15") # Note: VS2017 code seems to simply works in VS2015
-  find_library(OpenCV_LIBS opencv_world401 HINTS ${FIND_LIB_PREFIX}/opencv/x64/vc${VS_VERSION}/lib)
+  find_library(OpenCV_LIBS opencv_world411 HINTS ${FIND_LIB_PREFIX}/opencv/x64/vc${VS_VERSION}/lib)
   find_library(GFLAGS_LIBRARY_RELEASE gflags HINTS ${FIND_LIB_PREFIX}/caffe3rdparty/lib)
   find_library(GFLAGS_LIBRARY_DEBUG gflagsd HINTS ${FIND_LIB_PREFIX}/caffe3rdparty/lib)
   find_library(GLOG_LIBRARY_RELEASE glog HINTS ${FIND_LIB_PREFIX}/caffe3rdparty/lib)
@@ -718,7 +718,7 @@ if (UNIX OR APPLE)
       set(CAFFE_CPU_ONLY OFF)
       if (${GPU_MODE} MATCHES "CUDA")
         # execute_process(COMMAND git checkout master WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/3rdparty/caffe)
-        execute_process(COMMAND git checkout b5ede48 WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/3rdparty/caffe)
+        execute_process(COMMAND git checkout c95002f WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/3rdparty/caffe)
       elseif (${GPU_MODE} MATCHES "CPU_ONLY")
         if (USE_MKL)
           #execute_process(COMMAND git checkout intel WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/3rdparty/caffe)
@@ -754,7 +754,7 @@ if (UNIX OR APPLE)
             )
         else (USE_MKL)
           # execute_process(COMMAND git checkout master WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/3rdparty/caffe)
-          execute_process(COMMAND git checkout b5ede48 WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/3rdparty/caffe)
+          execute_process(COMMAND git checkout c95002f WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/3rdparty/caffe)
         endif (USE_MKL)
         set(CAFFE_CPU_ONLY ON)
         set(USE_CUDNN OFF)
@@ -776,6 +776,7 @@ if (UNIX OR APPLE)
           SOURCE_DIR ${CAFFE_URL}
           PREFIX ${CAFFE_PREFIX}
           CMAKE_ARGS -DCMAKE_INSTALL_PREFIX:PATH=<INSTALL_DIR>
+          -DCMAKE_TOOLCHAIN_FILE=${CMAKE_TOOLCHAIN_FILE}
           -DMKLDNN_INSTALL_DIR:PATH=<INSTALL_DIR>
           -DUSE_MKL2017_AS_DEFAULT_ENGINE=${CAFFE_CPU_ONLY}
           -DUSE_CUDNN=${USE_CUDNN}
@@ -796,6 +797,7 @@ if (UNIX OR APPLE)
           SOURCE_DIR ${CAFFE_URL}
           PREFIX ${CAFFE_PREFIX}
           CMAKE_ARGS -DCMAKE_INSTALL_PREFIX:PATH=<INSTALL_DIR>
+          -DCMAKE_TOOLCHAIN_FILE=${CMAKE_TOOLCHAIN_FILE}
           -DUSE_CUDNN=${USE_CUDNN}
           -DCUDA_ARCH_NAME=${CUDA_ARCH}
           -DCUDA_ARCH_BIN=${CUDA_ARCH_BIN}

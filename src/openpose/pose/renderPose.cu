@@ -1,8 +1,8 @@
-#include <openpose/gpu/cuda.hpp>
-#include <openpose/gpu/cuda.hu>
-#include <openpose/pose/poseParameters.hpp>
-#include <openpose/utilities/render.hu>
 #include <openpose/pose/renderPose.hpp>
+#include <openpose/gpu/cuda.hpp>
+#include <openpose/pose/poseParameters.hpp>
+#include <openpose_private/gpu/cuda.hu>
+#include <openpose_private/utilities/render.hu>
 
 namespace op
 {
@@ -725,8 +725,8 @@ namespace op
                     // OP_CUDA_PROFILE_END(timeNormalize1, 1e3, REPS);
 
                     // // Profiling code
-                    // log("  renderOld=" + std::to_string(timeNormalize0) + "ms");
-                    // log("  renderNew=" + std::to_string(timeNormalize1) + "ms");
+                    // opLog("  renderOld=" + std::to_string(timeNormalize0) + "ms");
+                    // opLog("  renderNew=" + std::to_string(timeNormalize1) + "ms");
                 }
                 else if (poseModel == PoseModel::COCO_18)
                     renderPoseCoco<<<threadsPerBlock, numBlocks>>>(
@@ -777,8 +777,8 @@ namespace op
                     // OP_CUDA_PROFILE_END(timeNormalize2, 1e3, REPS);
 
                     // // Profiling code
-                    // log("  renderOld=" + std::to_string(timeNormalize1) + "ms");
-                    // log("  renderNew=" + std::to_string(timeNormalize2) + "ms");
+                    // opLog("  renderOld=" + std::to_string(timeNormalize1) + "ms");
+                    // opLog("  renderNew=" + std::to_string(timeNormalize2) + "ms");
                 }
                 else if (poseModel == PoseModel::MPI_15 || poseModel == PoseModel::MPI_15_4)
                     renderPoseMpi29Parts<<<threadsPerBlock, numBlocks>>>(
@@ -865,9 +865,9 @@ namespace op
         }
     }
 
-    void renderPosePAFGpu(float* framePtr, const PoseModel poseModel, const Point<int>& frameSize,
-                          const float* const heatMapPtr, const Point<int>& heatMapSize, const float scaleToKeepRatio,
-                          const int part, const float alphaBlending)
+    void renderPosePAFGpu(
+        float* framePtr, const PoseModel poseModel, const Point<int>& frameSize, const float* const heatMapPtr,
+        const Point<int>& heatMapSize, const float scaleToKeepRatio, const int part, const float alphaBlending)
     {
         try
         {
@@ -880,16 +880,16 @@ namespace op
         }
     }
 
-    void renderPosePAFsGpu(float* framePtr, const PoseModel poseModel, const Point<int>& frameSize,
-                           const float* const heatMapPtr, const Point<int>& heatMapSize, const float scaleToKeepRatio,
-                           const float alphaBlending)
+    void renderPosePAFsGpu(
+        float* framePtr, const PoseModel poseModel, const Point<int>& frameSize, const float* const heatMapPtr,
+        const Point<int>& heatMapSize, const float scaleToKeepRatio, const float alphaBlending)
     {
         try
         {
             const auto numberBodyPartPairs = (int)getPosePartPairs(poseModel).size()/2;
             renderPosePAFGpuAux(
                 framePtr, poseModel, frameSize, heatMapPtr, heatMapSize, scaleToKeepRatio,
-                getPoseNumberBodyParts(poseModel) + (poseModel != PoseModel::BODY_25B ? 1 : 0),
+                getPoseNumberBodyParts(poseModel) + (addBkgChannel(poseModel) ? 1 : 0),
                 numberBodyPartPairs, alphaBlending);
         }
         catch (const std::exception& e)
@@ -898,9 +898,9 @@ namespace op
         }
     }
 
-    void renderPoseDistanceGpu(float* framePtr, const Point<int>& frameSize, const float* const heatMapPtr,
-                               const Point<int>& heatMapSize, const float scaleToKeepRatio, const unsigned int part,
-                               const float alphaBlending)
+    void renderPoseDistanceGpu(
+        float* framePtr, const Point<int>& frameSize, const float* const heatMapPtr, const Point<int>& heatMapSize,
+        const float scaleToKeepRatio, const unsigned int part, const float alphaBlending)
     {
         try
         {
