@@ -1,6 +1,6 @@
+#include <openpose/wrapper/wrapperAuxiliary.hpp>
 #include <openpose/gpu/gpu.hpp>
 #include <openpose/thread/enumClasses.hpp>
-#include <openpose/wrapper/wrapperAuxiliary.hpp>
 
 namespace op
 {
@@ -14,7 +14,7 @@ namespace op
     {
         try
         {
-            log("", Priority::Low, __LINE__, __FUNCTION__, __FILE__);
+            opLog("", Priority::Low, __LINE__, __FUNCTION__, __FILE__);
 
             // Check no wrong/contradictory flags enabled
             if (wrapperStructPose.alphaKeypoint < 0. || wrapperStructPose.alphaKeypoint > 1.
@@ -24,11 +24,12 @@ namespace op
             if (wrapperStructPose.scaleGap <= 0.f && wrapperStructPose.scalesNumber > 1)
                 error("The scale gap must be greater than 0 (it has no effect if the number of scales is 1).",
                       __LINE__, __FUNCTION__, __FILE__);
-            if (!renderOutput && (!wrapperStructOutput.writeImages.empty() || !wrapperStructOutput.writeVideo.empty()))
+            if (!renderOutput && (!wrapperStructOutput.writeImages.empty()
+                || !wrapperStructOutput.writeVideo.empty()))
             {
                 const auto message = "In order to save the rendered frames (`--write_images` or `--write_video`), you"
                                      " cannot disable `--render_pose`.";
-                log(message, Priority::High);
+                opLog(message, Priority::High);
             }
             if (!wrapperStructOutput.writeHeatMaps.empty() && wrapperStructPose.heatMapTypes.empty())
             {
@@ -39,7 +40,7 @@ namespace op
             }
             if (!wrapperStructOutput.writeHeatMaps.empty()
                 && (wrapperStructPose.heatMapScaleMode != ScaleMode::UnsignedChar &&
-                        wrapperStructOutput.writeHeatMapsFormat != "float"))
+                        wrapperStructOutput.writeHeatMapsFormat.getStdString() != "float"))
             {
                 const auto message = "In order to save the heatmaps, you must either set"
                                      " wrapperStructPose.heatMapScaleMode to ScaleMode::UnsignedChar (i.e., range"
@@ -91,14 +92,14 @@ namespace op
                                          " remove the display (set `--display 0` or `--no_gui_verbose`). If you"
                                          " simply want to use OpenPose to record video/images without keypoints, you"
                                          " only need to set `--num_gpu 0`." + additionalMessage;
-                    log(message, Priority::High);
+                    opLog(message, Priority::High);
                 }
                 if (wrapperStructInput.realTimeProcessing && savingSomething)
                 {
                     const auto message = "Real time processing is enabled as well as some writing function. Thus, some"
                                          " frames might be skipped. Consider disabling real time processing if you"
                                          " intend to save any results.";
-                    log(message, Priority::High);
+                    opLog(message, Priority::High);
                 }
             }
             if (!wrapperStructOutput.writeVideo.empty() && producerSharedPtr == nullptr)
@@ -124,7 +125,7 @@ namespace op
                       " `--hand_detector`.", __LINE__, __FUNCTION__, __FILE__);
             // Warning
             if (ownDetectorProvided && wrapperStructPose.poseMode != PoseMode::Disabled)
-                log("Warning: Body keypoint estimation is enabled while you have also selected to provide your own"
+                opLog("Warning: Body keypoint estimation is enabled while you have also selected to provide your own"
                     " face and/or hand rectangle detections (`face_detector 2` and/or `hand_detector 2`). Therefore,"
                     " OpenPose will not detect face and/or hand keypoints based on the body keypoints. Are you sure"
                     " you want to keep enabled the body keypoint detector? (disable it with `--body 0`).",
@@ -163,7 +164,7 @@ namespace op
                 {
                     wrapperStructPose.netInputSize.x = 656;
                     wrapperStructPose.netInputSize.y = 368;
-                    log("The default dynamic `--net_resolution` is not supported in MKL (MKL CPU Caffe) and OpenCL"
+                    opLog("The default dynamic `--net_resolution` is not supported in MKL (MKL CPU Caffe) and OpenCL"
                         " Caffe versions. Please, use a static `net_resolution` (recommended"
                         " `--net_resolution 656x368`) or use the Caffe CUDA master branch when processing images"
                         " and/or when using your custom image reader. OpenPose has automatically set the resolution"
@@ -171,7 +172,7 @@ namespace op
                 }
             #endif
             #ifndef USE_CUDA
-                log("---------------------------------- WARNING ----------------------------------\n"
+                opLog("---------------------------------- WARNING ----------------------------------\n"
                     "We have introduced an additional boost in accuracy in the CUDA version of about 0.2% with"
                     " respect to the CPU/OpenCL versions. We will not port this to CPU given the considerable slow"
                     " down in speed it would add to it. Nevertheless, this accuracy boost is almost insignificant so"
@@ -180,7 +181,7 @@ namespace op
                     Priority::High);
             #endif
 
-            log("", Priority::Low, __LINE__, __FUNCTION__, __FILE__);
+            opLog("", Priority::Low, __LINE__, __FUNCTION__, __FILE__);
         }
         catch (const std::exception& e)
         {

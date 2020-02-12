@@ -3,15 +3,17 @@ OpenPose - Installation
 
 ## Contents
 1. [Windows Portable Demo](#windows-portable-demo)
-2. [Operating Systems](#operating-systems)
-3. [Community-Based Work](#community-based-work)
-4. [Requirements and Dependencies](#requirements-and-dependencies)
-5. [Clone OpenPose](#clone-openpose)
-6. [Update OpenPose](#update-openpose)
-7. [Installation](#installation)
-8. [Reinstallation](#reinstallation)
-9. [Uninstallation](#uninstallation)
-10. [Optional Settings](#optional-settings)
+2. [Installation Video Tutorials](#windows-portable-demo)
+3. [Operating Systems](#operating-systems)
+4. [Community-Based Work](#community-based-work)
+5. [Requirements and Dependencies](#requirements-and-dependencies)
+6. [Clone OpenPose](#clone-openpose)
+7. [Update OpenPose](#update-openpose)
+8. [Installation](#installation)
+9. [Reinstallation](#reinstallation)
+10. [Uninstallation](#uninstallation)
+11. [Deploying OpenPose (Exporting OpenPose to Other Projects)](#desploying-openpose-exporting-openpose-to-other-projects)
+12. [Optional Settings](#optional-settings)
     1. [Maximum Speed](#maximum-speed)
     2. [COCO and MPI Models](#coco-and-mpi-models)
     3. [Python API](#python-api)
@@ -20,19 +22,29 @@ OpenPose - Installation
     6. [Mac OSX Version](#mac-osx-version)
     7. [3D Reconstruction Module](#3d-reconstruction-module)
     8. [Calibration Module](#calibration-module)
-    9. [Compiling without cuDNN](#compiling-without-cudnn)
-    10. [Custom Caffe](#custom-caffe)
-    11. [Custom NVIDIA NVCaffe](#custom-nvidia-nvcaffe)
-    12. [Custom OpenCV](#custom-opencv)
-    13. [Doxygen Documentation Autogeneration (Ubuntu Only)](#doxygen-documentation-autogeneration-ubuntu-only)
-    14. [CMake Command Line Configuration (Ubuntu Only)](#cmake-command-line-configuration-ubuntu-only)
+    9. [Unity Compatible Version](#unity-compatible-version)
+    10. [Compiling without cuDNN](#compiling-without-cudnn)
+    11. [Custom Caffe](#custom-caffe)
+    12. [Custom NVIDIA NVCaffe](#custom-nvidia-nvcaffe)
+    13. [Custom OpenCV](#custom-opencv)
+    14. [Doxygen Documentation Autogeneration (Ubuntu Only)](#doxygen-documentation-autogeneration-ubuntu-only)
+    15. [CMake Command Line Configuration (Ubuntu Only)](#cmake-command-line-configuration-ubuntu-only)
 
 
 
 ## Windows Portable Demo
-This installation section is only intended if you plan to modify the OpenPose code or integrate it with another library or project. If you just want to use the OpenPose demo in Windows, simply use the latest version of the OpenPose binaries which you can find in the [Releases](https://github.com/CMU-Perceptual-Computing-Lab/openpose/releases) section.
+**If you just want to use the OpenPose demo in Windows**, simply use the latest version of the OpenPose portable binaries which you can download in the [Releases](https://github.com/CMU-Perceptual-Computing-Lab/openpose/releases) section. Read the `Instructions.txt` inside the downloaded files to learn to download the models required by OpenPose (about 500 Mb).
 
-**NOTE**: Read the `Instructions.txt` to learn to download the models required by OpenPose (about 500 Mb).
+The installation documentation in the following sections is only intended if you plan to modify the OpenPose code or integrate it with another library or project. You can stop reading this document if you just wanted to run OpenPose on Windows.
+
+
+
+
+## Installation Video Tutorials
+User-created tutorial videos:
+- OpenPose + Visual Studio 2017 + CUDA 10.0 + cuDNN 7.5 (no portable demo): [https://youtu.be/QC9GTb6Wsb4](https://youtu.be/QC9GTb6Wsb4). For questions, post in GitHub issue #1426.
+
+We welcome users to send us their installation videos (e.g., sharing them as GitHub issue or doing a pull request) and we will post them here.
 
 
 
@@ -51,7 +63,9 @@ This installation section is only intended if you plan to modify the OpenPose co
 ## Community-Based Work
 We add links to some community-based work based on OpenPose. Note: We do not support them, and we will remove GitHub issues opened asking about them as well as block those users from posting again. If you face any issue, comment only in the comment IDs especified below and/or on their respective GitHubs.
 
-- [ROS example](https://github.com/firephinx/openpose_ros) (based on a very old OpenPose version). For questions and more details, read and post ONLY on [issue thread #51](https://github.com/CMU-Perceptual-Computing-Lab/openpose/issues/51).
+- ROS examples:
+    - [ROS example 1](https://github.com/ravijo/ros_openpose). For questions and more details, read and post ONLY on [issue thread #891](https://github.com/CMU-Perceptual-Computing-Lab/openpose/issues/891).
+    - [ROS example 2](https://github.com/firephinx/openpose_ros) (based on a very old OpenPose version). For questions and more details, read and post ONLY on [issue thread #51](https://github.com/CMU-Perceptual-Computing-Lab/openpose/issues/51).
 
 - Docker Images. For questions and more details, read and post ONLY on [issue thread #347](https://github.com/CMU-Perceptual-Computing-Lab/openpose/issues/347).
     - Dockerfile working also with CUDA 10:
@@ -99,7 +113,7 @@ We add links to some community-based work based on OpenPose. Note: We do not sup
 The first step is to clone the OpenPose repository.
 
 1. Windows: You might use [GitHub Desktop](https://desktop.github.com/).
-2. Ubuntu:
+2. Ubuntu/Mac:
 ```bash
 git clone https://github.com/CMU-Perceptual-Computing-Lab/openpose
 ```
@@ -128,7 +142,6 @@ The instructions in this section describe the steps to build OpenPose using CMak
 3. [OpenPose Configuration](#openpose-configuration)
 4. [OpenPose Building](#openpose-building)
 5. [Run OpenPose](#run-openpose)
-6. [OpenPose from other Projects (Ubuntu and Mac)](#openpose-from-other-projects-ubuntu-and-mac)
 
 
 
@@ -169,11 +182,18 @@ Note: If you prefer to use your own custom Caffe or OpenCV versions, see [Custom
 
 
 ### OpenPose Building
-#### Ubuntu and Mac
-Finally, build the project by running the following commands.
+#### Ubuntu
+Build the project by running the following commands.
 ```
 cd build/
 make -j`nproc`
+```
+
+#### Mac
+Build the project by running the following commands (note that Mac provides both `logicalcpu` and `physicalcpu`, but we want the logical number for maximum speed).
+```
+cd build/
+make -j`sysctl -n hw.logicalcpu`
 ```
 
 #### Windows
@@ -206,42 +226,6 @@ Check OpenPose was properly installed by running it on the default images, video
 
 
 
-### OpenPose from other Projects (Ubuntu and Mac)
-If you only intend to use the OpenPose demo, you might skip this step. This step is only recommended if you plan to use the OpenPose API from other projects.
-
-To install the OpenPose headers and libraries into the system environment path (e.g., `/usr/local/` or `/usr/`), run the following command.
-```
-cd build/
-sudo make install
-```
-
-Once the installation is completed, you can use OpenPose in your other project using the `find_package` cmake command. Below, is a small example `CMakeLists.txt`. In order to use this script, you also need to copy `FindGFlags.cmake` and `FindGlog.cmake` into your `<project_root_directory>/cmake/Modules/` (create the directory if necessary).
-```
-cmake_minimum_required(VERSION 2.8.7)
-
-add_definitions(-std=c++11)
-
-list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake/Modules")
-
-find_package(GFlags)
-find_package(Glog)
-find_package(OpenCV)
-find_package(OpenPose REQUIRED)
-
-include_directories(${OpenPose_INCLUDE_DIRS} ${GFLAGS_INCLUDE_DIR} ${GLOG_INCLUDE_DIR} ${OpenCV_INCLUDE_DIRS})
-
-add_executable(example.bin example.cpp)
-
-target_link_libraries(example.bin ${OpenPose_LIBS} ${GFLAGS_LIBRARY} ${GLOG_LIBRARY} ${OpenCV_LIBS})
-```
-
-If Caffe was built with OpenPose, it will automatically find it. Otherwise, you will need to link Caffe again as shown below (otherwise, you might get an error like `/usr/bin/ld: cannot find -lcaffe`).
-```
-link_directories(<path_to_caffe_installation>/caffe/build/install/lib)
-```
-
-
-
 ## Reinstallation
 In order to re-install OpenPose:
 1. (Ubuntu and Mac) If you ran `sudo make install`, then run `sudo make uninstall` in `build/`.
@@ -255,6 +239,11 @@ In order to re-install OpenPose:
 In order to uninstall OpenPose:
 1. (Ubuntu and Mac) If you ran `sudo make install`, then run `sudo make uninstall` in `build/`.
 2. Remove the OpenPose folder.
+
+
+
+## Deploying OpenPose (Exporting OpenPose to Other Projects)
+See [doc/deployment.md](./deployment.md).
 
 
 
@@ -375,6 +364,13 @@ After installation, check the [doc/modules/calibration_module.md](./modules/cali
 
 
 
+#### Unity Compatible Version
+Check [**Unity Plugin**](https://github.com/CMU-Perceptual-Computing-Lab/openpose_unity_plugin).
+
+However, the OpenPose Unity version will crash if if faces an error while it is not used inside Unity. Thus, do not use it without Unity. Although this version would work as long as no errors occur.
+
+
+
 #### Compiling without cuDNN
 The [cuDNN](https://developer.nvidia.com/cudnn) library is not mandatory, but required for full keypoint detection accuracy. In case your graphics card is not compatible with cuDNN, you can disable it by unchecking `USE_CUDNN` in CMake.
 
@@ -409,6 +405,8 @@ To use a NVIDIA's NVCaffe docker image instead of the standard Caffe, set the fo
 2. Set the `BUILD_CAFFE` variable to `OFF`.
 3. Set the correct `Caffe_INCLUDE_DIRS` and `Caffe_LIBS` paths following [Custom Caffe](#custom-caffe).
 
+In addition, [peter-uhrig.de/openpose-with-nvcaffe-in-a-singularity-container-with-support-for-multiple-architectures/](http://peter-uhrig.de/openpose-with-nvcaffe-in-a-singularity-container-with-support-for-multiple-architectures/) contains a detailed step-by-step guide to install a portable container with NVCaffe and support for multiple NVidia cards as well as CPU.
+
 
 
 #### Custom OpenCV
@@ -433,13 +431,13 @@ cd build
 
 The next step is to generate the Makefiles. Now there can be multiple scenarios based on what the user already has e.x. Caffe might be already installed and the user might be interested in building OpenPose against that version of Caffe instead of requiring OpenPose to build Caffe from scratch.
 
-##### SCENARIO 1 -- Caffe not installed and OpenCV installed using `apt-get`
+##### Scenario 1 - Caffe not installed and OpenCV installed using `apt-get`
 In the build directory, run the below command --
 ```bash
 cmake ..
 ```
 
-##### SCENARIO 2 -- Caffe installed and OpenCV build from source
+##### Scenario 2 - Caffe installed and OpenCV build from source
 In this example, we assume that Caffe and OpenCV are already present. The user needs to supply the paths of the libraries and the include directories to CMake. For OpenCV, specify the include directories and the libraries directory using `OpenCV_INCLUDE_DIRS` and `OpenCV_LIBS_DIR` variables respectively. Alternatively, the user can also specify the path to the `OpenCVConfig.cmake` file by setting the `OpenCV_CONFIG_FILE` variable. For Caffe, specify the include directory and library using the `Caffe_INCLUDE_DIRS` and `Caffe_LIBS` variables. This will be where you installed Caffe. Below is an example of the same.
 ```bash
 cmake -DOpenCV_INCLUDE_DIRS=/home/"${USER}"/softwares/opencv/build/install/include \
@@ -454,7 +452,7 @@ cmake -DOpenCV_CONFIG_FILE=/home/"${USER}"/softwares/opencv/build/install/share/
   -DCaffe_LIBS=/home/"${USER}"/softwares/caffe/build/install/lib/libcaffe.so -DBUILD_CAFFE=OFF ..
 ```
 
-##### SCENARIO 3 -- OpenCV already installed
+##### Scenario 3 - OpenCV already installed
 If Caffe is not already present but OpenCV is, then use the below command.
 ```bash
 cmake -DOpenCV_INCLUDE_DIRS=/home/"${USER}"/softwares/opencv/build/install/include \
@@ -464,3 +462,6 @@ cmake -DOpenCV_INCLUDE_DIRS=/home/"${USER}"/softwares/opencv/build/install/inclu
 ```bash
 cmake -DOpenCV_CONFIG_FILE=/home/"${USER}"/softwares/opencv/build/install/share/OpenCV/OpenCVConfig.cmake ..
 ```
+
+##### Any Other Scenario
+You can check the CMake online documentation to check all the options that CMake provides and its analogs to the CMake-gui ones that we show on this document.

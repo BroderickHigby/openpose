@@ -30,14 +30,14 @@ git submodule update --init --recursive --remote
 ### Ubuntu Prerequisites
 1. Ubuntu - **Anaconda should not be installed** on your system. Anaconda includes a Protobuf version that is incompatible with Caffe. Either you uninstall anaconda and install protobuf via apt-get, or you compile your own Caffe and link it to OpenPose.
 2. Install **CMake GUI**:
-    - Ubuntu 14 or 16: run the command `sudo apt-get install cmake-qt-gui`. Note: If you prefer to use CMake through the command line, see [CMake Command Line Configuration (Ubuntu Only)](#cmake-command-line-configuration-ubuntu-only).
+    - Ubuntu 14 or 16: run the command `sudo apt-get install cmake-qt-gui`. Note: If you prefer to use CMake through the command line, see [doc/installation.md#CMake Command Line Configuration (Ubuntu Only)](./installation.md#cmake-command-line-configuration-ubuntu-only).
     - Ubuntu 18: **Download and compile CMake-gui from source**. The default CMake-gui version (3.10) installed via `sudo apt-get install cmake-qt-gui` provokes some compiling errors. Required CMake version >= 3.12.
         - Uninstall your current Cmake-gui version by running `sudo apt purge cmake-qt-gui`.
         - Run `sudo apt-get install qtbase5-dev`.
         - Download the `Latest Release` of `CMake Unix/Linux Source` from the [CMake download website](https://cmake.org/download/), called `cmake-X.X.X.tar.gz`.
         - Unzip it and go inside that folder from the terminal.
         - Run `./configure --qt-gui`. Make sure no error occurred.
-        - Run `./bootstrap && make -j8 && make install -j8`. Make sure no error occurred.
+        - Run ``./bootstrap && make -j`nproc` && sudo make install -j`nproc` ``. Make sure no error occurred.
         - Assuming your CMake downloaded folder is in {CMAKE_FOLDER_PATH}, everytime these instructions mentions `cmake-gui`, you will have to replace that line by `{CMAKE_FOLDER_PATH}/bin/cmake-gui`.
 3. Nvidia GPU version prerequisites:
     1. **Note: OpenPose has been tested extensively with CUDA 8.0 (cuDNN 5.1) and CUDA 10.0 (cuDNN 7.5)**. We highly recommend using those versions to minimize potential installation issues. Other versions should also work, but we do not provide support about any CUDA/cuDNN installation/compilation issue, as well as problems relate dto their integration into OpenPose.
@@ -48,7 +48,7 @@ git submodule update --init --recursive --remote
             - Follow the Nvidia website installation instructions. Make sure to enable the symbolic link in `usr/local/cuda` to minimize potential future errors.
     3. **cuDNN**:
         - Ubuntu 14 or 16 ([**cuDNN 5.1**](https://developer.nvidia.com/rdp/cudnn-archive) **or 7.2**): Run `sudo ./scripts/ubuntu/install_cudnn.sh` (if Ubuntu 16 or 14 and for Graphic cards up to 10XX) or alternatively download and install it from their website.
-        - Ubuntu 18 ([**cuDNN 7.2**](https://developer.nvidia.com/cudnn)): Download and install it from the [Nvidia website](https://developer.nvidia.com/cudnn).
+        - Ubuntu 18 ([**cuDNN 7.5**](https://developer.nvidia.com/cudnn)): Download and install it from the [Nvidia website](https://developer.nvidia.com/cudnn).
         - In order to manually install it (any version), just unzip it and copy (merge) the contents on the CUDA folder, usually `/usr/local/cuda/` in Ubuntu and `C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v8.0` in Windows.
 5. AMD GPU version prerequisites:
     1. Ubuntu 14 or 16:
@@ -57,7 +57,7 @@ git submodule update --init --recursive --remote
     2. Ubuntu 18: Not tested and not officially supported. Try at your risk.
 6. Install **Caffe, OpenCV, and Caffe prerequisites**:
     - Caffe prerequisites: By default, OpenPose uses Caffe under the hood. If you have not used Caffe previously, install its dependencies by running `sudo bash ./scripts/ubuntu/install_deps_and_cuda.sh` (if Ubuntu 16 or 14 and for Graphic cards up to 10XX) or run `sudo bash ./scripts/ubuntu/install_deps.sh` after installing your desired CUDA and cuDNN versions.
-    - OpenCV must be already installed on your machine. It can be installed with `apt-get install libopencv-dev`. You can also use your own compiled OpenCV version.
+    - OpenCV must be already installed on your machine. It can be installed with `sudo apt-get install libopencv-dev`. You can also use your own compiled OpenCV version.
 7. **Eigen prerequisite** (optional, only required for some specific extra functionality, such as extrinsic camera calibration):
     - If you enable the `WITH_EIGEN` flag when running CMake, you must have Eigen already installed in your system. Note that [Eigen <= 3.3.6 is not supported by CUDA >=9.1](https://bitbucket.org/eigen/eigen/commits/034b6c3e101792a3cc3ccabd9bfaddcabe85bb58?at=default). In order to install it, you can perform any of the 3 following options (but only 1 of them!), while making sure that Eigen version is compatible with CUDA:
         1. Do not do anything if you set the `WITH_EIGEN` flag to `BUILD`, CMake will automatically download Eigen. Alternatively, you might prefer to download it manually:

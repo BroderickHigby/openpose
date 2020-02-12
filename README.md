@@ -30,6 +30,7 @@ It is **authored by [Gines Hidalgo](https://www.gineshidalgo.com), [Zhe Cao](htt
 - **Functionality**:
     - **2D real-time multi-person keypoint detection**:
         - 15 or 18 or **25-keypoint body/foot keypoint estimation**. **Running time invariant to number of detected people**.
+        - **6-keypoint foot keypoint estimation**. Integrated together with the 25-keypoint body/foot keypoint detector.
         - **2x21-keypoint hand keypoint estimation**. Currently, **running time depends** on **number of detected people**.
         - **70-keypoint face keypoint estimation**. Currently, **running time depends** on **number of detected people**.
     - **3D real-time single-person keypoint detection**:
@@ -42,23 +43,22 @@ It is **authored by [Gines Hidalgo](https://www.gineshidalgo.com), [Zhe Cao](htt
 - **Input**: Image, video, webcam, Flir/Point Grey and IP camera. Included C++ demos to add your custom input.
 - **Output**: Basic image + keypoint display/saving (PNG, JPG, AVI, ...), keypoint saving (JSON, XML, YML, ...), and/or keypoints as array class.
 - **OS**: Ubuntu (14, 16), Windows (8, 10), Mac OSX, Nvidia TX2.
+- **Training and datasets**:
+    - [**OpenPose Training**](https://github.com/CMU-Perceptual-Computing-Lab/openpose_train).
+    - [**Foot dataset website**](https://cmu-perceptual-computing-lab.github.io/foot_keypoint_dataset/).
 - **Others**:
     - Available: command-line demo, C++ wrapper, and C++ API.
     - [**Python API**](doc/modules/python_module.md).
     - [**Unity Plugin**](https://github.com/CMU-Perceptual-Computing-Lab/openpose_unity_plugin).
     - CUDA (Nvidia GPU), OpenCL (AMD GPU), and CPU-only (no GPU) versions.
-    - Training code included in the [**original CVPR 2017 GitHub repository**](https://github.com/ZheC/Multi-Person-Pose-Estimation).
 
 
 
 ## Latest Features
+- Sep 2019: [**Training code released**](https://github.com/CMU-Perceptual-Computing-Lab/openpose_train)!
 - Jan 2019: [**Unity plugin released**](https://github.com/CMU-Perceptual-Computing-Lab/openpose_unity_plugin)!
 - Jan 2019: [**Improved Python API**](doc/modules/python_module.md) released! Including body, face, hands, and all the functionality of the C++ API!
-- Dec 2018: [**Foot dataset**](https://cmu-perceptual-computing-lab.github.io/foot_keypoint_dataset) and [**new paper released**](https://arxiv.org/abs/1812.08008)!
-- Sep 2018: [**Experimental single-person tracker**](doc/quick_start.md#tracking) for further speed up or visual smoothing!
-- Jun 2018: [**Combined body-foot model released! 40% faster and 5% more accurate**](doc/installation.md)!
-- Jun 2018: [**OpenCL/AMD graphic card version**](doc/installation.md) released!
-- Jun 2018: [**Calibration toolbox**](doc/modules/calibration_module.md) released!
+- Dec 2018: [**Foot dataset released**](https://cmu-perceptual-computing-lab.github.io/foot_keypoint_dataset) and [**new paper released**](https://arxiv.org/abs/1812.08008)!
 
 For further details, check [all released features](doc/released_features.md) and [release notes](doc/release_notes.md).
 
@@ -113,7 +113,7 @@ This analysis was performed using the same images for each algorithm and a batch
 5. [Quick Start](#quick-start)
 6. [Output](#output)
 7. [Speeding Up OpenPose and Benchmark](#speeding-up-openpose-and-benchmark)
-8. [Foot Dataset](#foot-dataset)
+8. [Training Code and Foot Dataset](#training-code-and-foot-dataset)
 9. [Send Us Failure Cases and Feedback!](#send-us-failure-cases-and-feedback)
 10. [Citation](#citation)
 11. [License](#license)
@@ -162,8 +162,10 @@ Check the OpenPose Benchmark as well as some hints to speed up and/or reduce the
 
 
 
-## Foot Dataset
-Check the [foot dataset website](https://cmu-perceptual-computing-lab.github.io/foot_keypoint_dataset/) and new [OpenPose paper](https://arxiv.org/abs/1812.08008) for more information.
+## Training Code and Foot Dataset
+For training OpenPose, check [github.com/CMU-Perceptual-Computing-Lab/openpose_train](https://github.com/CMU-Perceptual-Computing-Lab/openpose_train).
+
+For the foot dataset, check the [foot dataset website](https://cmu-perceptual-computing-lab.github.io/foot_keypoint_dataset/) and new [OpenPose paper](https://arxiv.org/abs/1812.08008) for more information.
 
 
 
@@ -182,7 +184,7 @@ Just comment on GitHub or make a pull request and we will answer as soon as poss
 
 
 ## Citation
-Please cite these papers in your publications if it helps your research (the face keypoint detector was trained using the procedure described in [Simon et al. 2017] for hands):
+Please cite these papers in your publications if it helps your research. The body-foot model and any additional functionality (calibration, 3-D reconstruction, etc.) use `[Cao et al. 2018]`; the hand and face keypoint detectors use `[Cao et al. 2018]` and `[Simon et al. 2017]` (the face detector was trained using the same procedure than for hands); and the old (deprecated) body-only model uses `[Cao et al. 2017]`.
 
     @inproceedings{cao2018openpose,
       author = {Zhe Cao and Gines Hidalgo and Tomas Simon and Shih-En Wei and Yaser Sheikh},
@@ -191,17 +193,17 @@ Please cite these papers in your publications if it helps your research (the fac
       year = {2018}
     }
 
-    @inproceedings{cao2017realtime,
-      author = {Zhe Cao and Tomas Simon and Shih-En Wei and Yaser Sheikh},
-      booktitle = {CVPR},
-      title = {Realtime Multi-Person 2D Pose Estimation using Part Affinity Fields},
-      year = {2017}
-    }
-
     @inproceedings{simon2017hand,
       author = {Tomas Simon and Hanbyul Joo and Iain Matthews and Yaser Sheikh},
       booktitle = {CVPR},
       title = {Hand Keypoint Detection in Single Images using Multiview Bootstrapping},
+      year = {2017}
+    }
+
+    @inproceedings{cao2017realtime,
+      author = {Zhe Cao and Tomas Simon and Shih-En Wei and Yaser Sheikh},
+      booktitle = {CVPR},
+      title = {Realtime Multi-Person 2D Pose Estimation using Part Affinity Fields},
       year = {2017}
     }
 
@@ -215,11 +217,11 @@ Please cite these papers in your publications if it helps your research (the fac
 Links to the papers:
 
 - [OpenPose: Realtime Multi-Person 2D Pose Estimation using Part Affinity Fields](https://arxiv.org/abs/1812.08008)
-- [Realtime Multi-Person 2D Pose Estimation using Part Affinity Fields](https://arxiv.org/abs/1611.08050)
 - [Hand Keypoint Detection in Single Images using Multiview Bootstrapping](https://arxiv.org/abs/1704.07809)
+- [Realtime Multi-Person 2D Pose Estimation using Part Affinity Fields](https://arxiv.org/abs/1611.08050)
 - [Convolutional Pose Machines](https://arxiv.org/abs/1602.00134)
 
 
 
 ## License
-OpenPose is freely available for free non-commercial use, and may be redistributed under these conditions. Please, see the [license](LICENSE) for further details. Interested in a commercial license? Check this [FlintBox link](https://flintbox.com/public/project/47343/). For commercial queries, use the `Directly Contact Organization` section from the [FlintBox link](https://flintbox.com/public/project/47343/) and also send a copy of that message to [Yaser Sheikh](http://www.cs.cmu.edu/~yaser/).
+OpenPose is freely available for free non-commercial use, and may be redistributed under these conditions. Please, see the [license](LICENSE) for further details. Interested in a commercial license? Check this [FlintBox link](https://flintbox.com/public/project/47343/). For commercial queries, use the `Directly Contact Organization` section from the [FlintBox link](https://flintbox.com/public/project/47343/) and also send a copy of that message to [Yaser Sheikh](mailto:yaser@cs.cmu.edu).
