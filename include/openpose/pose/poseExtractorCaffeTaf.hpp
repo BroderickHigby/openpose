@@ -1,5 +1,5 @@
-#ifndef OPENPOSE_POSE_POSE_EXTRACTOR_CAFFE_HPP
-#define OPENPOSE_POSE_POSE_EXTRACTOR_CAFFE_HPP
+#ifndef OPENPOSE_POSE_POSE_EXTRACTOR_CAFFE_TAF_HPP
+#define OPENPOSE_POSE_POSE_EXTRACTOR_CAFFE_TAF_HPP
 
 #include <openpose/core/common.hpp>
 #include <openpose/net/bodyPartConnectorCaffe.hpp>
@@ -10,22 +10,29 @@
 #include <openpose/net/resizeAndMergeCaffe.hpp>
 #include <openpose/pose/enumClasses.hpp>
 #include <openpose/pose/poseExtractorNet.hpp>
+#include <openpose/pose/poseTracker.hpp>
 
 namespace op
 {
-    class OP_API PoseExtractorCaffe : public PoseExtractorNet
+    class OP_API PoseExtractorCaffeTaf : public PoseExtractorNet
     {
     public:
-        PoseExtractorCaffe(
+        PoseExtractorCaffeTaf(
             const PoseModel poseModel, const std::string& modelFolder, const int gpuId,
             const std::vector<HeatMapType>& heatMapTypes = {},
-            const ScaleMode heatMapScaleMode = ScaleMode::ZeroToOneFixedAspect,
+            const ScaleMode heatMapScaleMode = ScaleMode::ZeroToOne,
             const bool addPartCandidates = false, const bool maximizePositives = false,
             const std::string& protoTxtPath = "", const std::string& caffeModelPath = "",
             const float upsamplingRatio = 0.f, const bool enableNet = true,
             const bool enableGoogleLogging = true);
 
-        virtual ~PoseExtractorCaffe();
+        void addCaffeNetOnThread(
+                std::vector<std::shared_ptr<Net>>& net,
+                std::vector<std::shared_ptr<ArrayCpuGpu<float>>>& caffeNetOutputBlob,
+                const PoseModel poseModel, const int gpuId, const std::string& modelFolder,
+                const std::string& protoTxtPath, const std::string& caffeModelPath, const bool enableGoogleLogging);
+
+        virtual ~PoseExtractorCaffeTaf();
 
         virtual void netInitializationOnThread();
 
@@ -65,6 +72,7 @@ namespace op
         const bool mEnableGoogleLogging;
         // General parameters
         std::vector<std::shared_ptr<Net>> spNets;
+        std::vector<std::shared_ptr<Net>> spNetsTrack;
         std::shared_ptr<ResizeAndMergeCaffe<float>> spResizeAndMergeCaffe;
         std::shared_ptr<NmsCaffe<float>> spNmsCaffe;
         std::shared_ptr<BodyPartConnectorCaffe<float>> spBodyPartConnectorCaffe;
@@ -76,8 +84,22 @@ namespace op
         std::shared_ptr<ArrayCpuGpu<float>> spPeaksBlob;
         std::shared_ptr<ArrayCpuGpu<float>> spMaximumPeaksBlob;
 
-        DELETE_COPY(PoseExtractorCaffe);
+        std::vector<std::shared_ptr<ArrayCpuGpu<float>>> mCurrPafBlobs;
+        std::vector<std::shared_ptr<ArrayCpuGpu<float>>> mCurrFmBlobs;
+
+        std::vector<std::shared_ptr<ArrayCpuGpu<float>>> mTrackCurrTafBlobs;
+        std::vector<std::shared_ptr<ArrayCpuGpu<float>>> mTrackLastTafBlobs;
+        std::vector<std::shared_ptr<ArrayCpuGpu<float>>> mTrackCurrFmBlobs;
+        std::vector<std::shared_ptr<ArrayCpuGpu<float>>> mTrackLastFmBlobs;
+        std::vector<std::shared_ptr<ArrayCpuGpu<float>>> mTrackCurrPafBlobs;
+        std::vector<std::shared_ptr<ArrayCpuGpu<float>>> mTrackLastPafBlobs;
+
+        std::shared_ptr<ArrayCpuGpu<float>> spTafsBlob;
+
+        std::unique_ptr<PoseTracker> mPoseTracker;
+
+        DELETE_COPY(PoseExtractorCaffeTaf);
     };
 }
 
-#endif // OPENPOSE_POSE_POSE_EXTRACTOR_CAFFE_HPP
+#endif // OPENPOSE_POSE_POSE_EXTRACTOR_CAFFE_TAF_HPP

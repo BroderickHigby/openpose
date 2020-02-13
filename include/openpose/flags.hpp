@@ -167,12 +167,17 @@ DEFINE_int32(3d_views,                  -1,             "Complementary option fo
                                                         " iteration, allowing tasks such as stereo camera processing (`--3d`). Note that"
                                                         " `--camera_parameter_path` must be set. OpenPose must find as many `xml` files in the"
                                                         " parameter folder as this number indicates.");
-// Extra algorithms
-DEFINE_bool(identification,             false,          "Experimental, not available yet. Whether to enable people identification across frames.");
+// Tracking
 DEFINE_int32(tracking,                  -1,             "Experimental, not available yet. Whether to enable people tracking across frames. The"
                                                         " value indicates the number of frames where tracking is run between each OpenPose keypoint"
                                                         " detection. Select -1 (default) to disable it or 0 to run simultaneously OpenPose keypoint"
                                                         " detector and tracking for potentially higher accurary than only OpenPose.");
+// Extra algorithms
+DEFINE_bool(identification,             false,          "Experimental, not available yet. Whether to enable people identification across frames.");
+// DEFINE_int32(tracking,                  -1,             "Experimental, not available yet. Whether to enable people tracking across frames. The"
+//                                                         " value indicates the number of frames where tracking is run between each OpenPose keypoint"
+//                                                         " detection. Select -1 (default) to disable it or 0 to run simultaneously OpenPose keypoint"
+//                                                         " detector and tracking for potentially higher accurary than only OpenPose.");
 DEFINE_int32(ik_threads,                0,              "Experimental, not available yet. Whether to enable inverse kinematics (IK) from 3-D"
                                                         " keypoints to obtain 3-D joint angles. By default (0 threads), it is disabled. Increasing"
                                                         " the number of threads will increase the speed but also the global system latency.");

@@ -87,9 +87,13 @@ void configureWrapper(op::Wrapper& opWrapper)
             op::flagsToRenderMode(FLAGS_hand_render, multipleView, FLAGS_render_pose), (float)FLAGS_hand_alpha_pose,
             (float)FLAGS_hand_alpha_heatmap, (float)FLAGS_hand_render_threshold};
         opWrapper.configure(wrapperStructHand);
+        // Tracking (use op::WrapperStructTracking{} to disable it)
+        const op::WrapperStructTracking wrapperStructTracking{
+            FLAGS_tracking}; // Raaj: Add your flags in here
+        opWrapper.configure(wrapperStructTracking);
         // Extra functionality configuration (use op::WrapperStructExtra{} to disable it)
         const op::WrapperStructExtra wrapperStructExtra{
-            FLAGS_3d, FLAGS_3d_min_views, FLAGS_identification, FLAGS_tracking, FLAGS_ik_threads};
+            FLAGS_3d, FLAGS_3d_min_views, FLAGS_identification, -1, FLAGS_ik_threads};
         opWrapper.configure(wrapperStructExtra);
         // Producer (use default to disable any input)
         const op::WrapperStructInput wrapperStructInput{

@@ -6,6 +6,7 @@
 #include <openpose/pose/poseCpuRenderer.hpp>
 #include <openpose/pose/poseExtractor.hpp>
 #include <openpose/pose/poseExtractorCaffe.hpp>
+#include <openpose/pose/poseExtractorCaffeStaf.hpp>
 #include <openpose/pose/poseExtractorNet.hpp>
 #include <openpose/pose/poseGpuRenderer.hpp>
 #include <openpose/pose/poseParameters.hpp>

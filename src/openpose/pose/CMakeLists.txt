@@ -3,10 +3,13 @@ set(SOURCES_OP_POSE
     poseCpuRenderer.cpp
     poseExtractor.cpp
     poseExtractorCaffe.cpp
+    poseExtractorCaffeStaf.cpp
+    poseExtractorCaffeTaf.cpp
     poseExtractorNet.cpp
     poseGpuRenderer.cpp
     poseParameters.cpp
     poseParametersRender.cpp
+    poseTracker.cpp
     poseRenderer.cpp
     renderPose.cpp
     renderPose.cu)

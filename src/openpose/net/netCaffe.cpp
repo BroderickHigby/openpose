@@ -105,7 +105,7 @@ namespace op
         #endif
         {
             try
-            {
+            {                
                 caffeNet->blobs()[0]->Reshape(dimensions);
                 caffeNet->Reshape();
                 #ifdef USE_CUDA
@@ -206,6 +206,39 @@ namespace op
         }
     }
 
+    void NetCaffe::reshape(const std::vector<int> &dimensions, std::string name, bool reshape) const
+    {
+        try
+        {
+            #ifdef USE_CAFFE
+                upImpl->upCaffeNet->blob_by_name(name)->Reshape(dimensions);
+                if(reshape) upImpl->upCaffeNet->Reshape();
+            #else
+                UNUSED(dimensions);
+            #endif
+        }
+        catch (const std::exception& e)
+        {
+            error(e.what(), __LINE__, __FUNCTION__, __FILE__);
+        }
+    }
+
+    const std::vector<int> NetCaffe::shape(std::string name) const
+    {
+        try
+        {
+            #ifdef USE_CAFFE
+                return upImpl->upCaffeNet->blob_by_name(name)->shape();
+            #else
+                UNUSED(name);
+            #endif
+        }
+        catch (const std::exception& e)
+        {
+            error(e.what(), __LINE__, __FUNCTION__, __FILE__);
+        }
+    }
+
     void NetCaffe::forwardPass(const Array<float>& inputData) const
     {
         try
@@ -257,12 +290,49 @@ namespace op
         }
     }
 
+    void NetCaffe::forwardPass() const
+    {
+        try
+        {
+            #ifdef USE_CAFFE
+                upImpl->upCaffeNet->ForwardFrom(0);
+                // Cuda checks
+                #ifdef USE_CUDA
+                    cudaCheck(__LINE__, __FUNCTION__, __FILE__);
+                #endif
+            #else
+                UNUSED(inputData);
+            #endif
+        }
+        catch (const std::exception& e)
+        {
+            error(e.what(), __LINE__, __FUNCTION__, __FILE__);
+        }
+    }
+
     std::shared_ptr<ArrayCpuGpu<float>> NetCaffe::getOutputBlobArray() const
     {
         try
         {
             #ifdef USE_CAFFE
                 return std::make_shared<ArrayCpuGpu<float>>(upImpl->spOutputBlob.get());
+            #else
+                return nullptr;
+            #endif
+        }
+        catch (const std::exception& e)
+        {
+            error(e.what(), __LINE__, __FUNCTION__, __FILE__);
+            return nullptr;
+        }
+    }
+
+    std::shared_ptr<ArrayCpuGpu<float>> NetCaffe::getBlobArray(std::string name) const
+    {
+        try
+        {
+            #ifdef USE_CAFFE
+                return std::make_shared<ArrayCpuGpu<float>>(upImpl->upCaffeNet->blob_by_name(name).get());
             #else
                 return nullptr;
             #endif

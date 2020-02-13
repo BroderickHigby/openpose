@@ -26,7 +26,8 @@ namespace op
 
         std::pair<int, std::string> renderPose(Array<float>& outputData, const Array<float>& poseKeypoints,
                                                const float scaleInputToOutput,
-                                               const float scaleNetToOutput = -1.f);
+                                               const float scaleNetToOutput = -1.f,
+                                               const Array<long long>& poseIds = op::Array<long long>(0));
 
     private:
         const std::shared_ptr<PoseExtractorNet> spPoseExtractorNet;
