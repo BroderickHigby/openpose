@@ -11,5 +11,6 @@
 #include <openpose/wrapper/wrapperStructInput.hpp>
 #include <openpose/wrapper/wrapperStructOutput.hpp>
 #include <openpose/wrapper/wrapperStructPose.hpp>
+#include <openpose/wrapper/wrapperStructTracking.hpp>
 
 #endif // OPENPOSE_WRAPPER_HEADERS_HPP

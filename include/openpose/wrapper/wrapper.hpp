@@ -11,6 +11,7 @@
 #include <openpose/wrapper/wrapperStructInput.hpp>
 #include <openpose/wrapper/wrapperStructOutput.hpp>
 #include <openpose/wrapper/wrapperStructPose.hpp>
+#include <openpose/wrapper/wrapperStructTracking.hpp>
 
 namespace op
 {
@@ -81,6 +82,11 @@ namespace op
          * Analogous to configure() but applied to hand (WrapperStructHand)
          */
         void configure(const WrapperStructHand& wrapperStructHand);
+
+        /**
+         * It configures the pose tracking parameters. Do not call for default values.
+         */
+        void configure(const WrapperStructTracking& wrapperStructTracking);
 
         /**
          * Analogous to configure() but applied to the extra options (WrapperStructExtra)
@@ -234,6 +240,7 @@ namespace op
         WrapperStructPose mWrapperStructPose;
         WrapperStructFace mWrapperStructFace;
         WrapperStructHand mWrapperStructHand;
+        WrapperStructTracking mWrapperStructTracking;
         WrapperStructExtra mWrapperStructExtra;
         WrapperStructInput mWrapperStructInput;
         WrapperStructOutput mWrapperStructOutput;
@@ -356,6 +363,19 @@ namespace op
     }
 
     template<typename TDatum, typename TDatums, typename TDatumsSP, typename TWorker>
+    void WrapperT<TDatum, TDatums, TDatumsSP, TWorker>::configure(const WrapperStructTracking& wrapperStructTracking)
+    {
+        try
+        {
+            mWrapperStructTracking = wrapperStructTracking;
+        }
+        catch (const std::exception& e)
+        {
+            error(e.what(), __LINE__, __FUNCTION__, __FILE__);
+        }
+    }
+
+    template<typename TDatum, typename TDatums, typename TDatumsSP, typename TWorker>
     void WrapperT<TDatum, TDatums, TDatumsSP, TWorker>::configure(const WrapperStructExtra& wrapperStructExtra)
     {
         try
@@ -414,9 +434,9 @@ namespace op
         {
             configureThreadManager<TDatum, TDatums, TDatumsSP, TWorker>(
                 mThreadManager, mMultiThreadEnabled, mThreadManagerMode, mWrapperStructPose, mWrapperStructFace,
-                mWrapperStructHand, mWrapperStructExtra, mWrapperStructInput, mWrapperStructOutput, mWrapperStructGui,
-                mUserWs, mUserWsOnNewThread);
-            opLog("", Priority::Low, __LINE__, __FUNCTION__, __FILE__);
+                mWrapperStructHand, mWrapperStructTracking, mWrapperStructExtra, mWrapperStructInput,
+                mWrapperStructOutput, mWrapperStructGui, mUserWs, mUserWsOnNewThread);
+            log("", Priority::Low, __LINE__, __FUNCTION__, __FILE__);
             mThreadManager.exec();
         }
         catch (const std::exception& e)
@@ -432,9 +452,9 @@ namespace op
         {
             configureThreadManager<TDatum, TDatums, TDatumsSP, TWorker>(
                 mThreadManager, mMultiThreadEnabled, mThreadManagerMode, mWrapperStructPose, mWrapperStructFace,
-                mWrapperStructHand, mWrapperStructExtra, mWrapperStructInput, mWrapperStructOutput, mWrapperStructGui,
-                mUserWs, mUserWsOnNewThread);
-            opLog("", Priority::Low, __LINE__, __FUNCTION__, __FILE__);
+                mWrapperStructHand, mWrapperStructTracking, mWrapperStructExtra, mWrapperStructInput,
+                mWrapperStructOutput, mWrapperStructGui, mUserWs, mUserWsOnNewThread);
+            log("", Priority::Low, __LINE__, __FUNCTION__, __FILE__);
             mThreadManager.start();
         }
         catch (const std::exception& e)
